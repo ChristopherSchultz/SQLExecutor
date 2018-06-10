@@ -1,17 +1,17 @@
 # SQLExecutor
 A command-line tool to execute SQL scripts.
 
-##Building
+## Building
 
     mvn package
 
-##Running
+## Running
 
     java -jar sqlexecutor.jar [options]
 
 When running with `java -jar`, you can't also specify a JDBC driver JAR file. Instead, use the `--driverjar` option.
 
-##Command-line options
+## Command-line options
 ```
 Options (required):
   --driver className  The name of the JDBC driver class.
@@ -30,7 +30,7 @@ Options:
   --help, -h          Shows this help text.
 ```
 
-##Script-execution commands
+## Script-execution commands
 
 ```
 Commands:
