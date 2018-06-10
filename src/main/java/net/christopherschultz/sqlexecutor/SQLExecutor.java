@@ -392,6 +392,7 @@ public class SQLExecutor
                         System.out.println("  r            ROLLBACK the current transaction (executes a ROLLBACK statement)");
                         System.out.println("  c            COMMIT the current transaction (executes COMMIT statement)");
                         System.out.println("  m            Read more lines of the script into the current statement");
+                        System.out.println("  e            Edit the query using a text editor");
                         System.out.println("  >            Execute an arbitrary ad-hoc statement");
                         System.out.println("  q            Quit");
                         System.out.println();
@@ -703,11 +704,13 @@ public class SQLExecutor
         System.out.println("  --script   file     The name of the script file to execute.");
         System.out.println();
         System.out.println("Options:");
+        System.out.println("  --askpass           Securely-requests the password from the console.");
         System.out.println("  --clear             Clears the screen before displaying each statement.");
+        System.out.println("  --driverjar jarfile Specifies the JAR file containing the JDBC driver.");
         System.out.println("  --encoding charset  The character encoding of the script file.");
-        System.out.println("  --username username The name of the database user.");
         System.out.println("  --password password The database password.");
         System.out.println("  --skip n            Skips n lines at the beginning of the script.");
+        System.out.println("  --username username The name of the database user.");
         System.out.println("  --help, -h          Shows this help text.");
     }
 }
