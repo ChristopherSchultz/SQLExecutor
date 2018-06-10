@@ -1,5 +1,8 @@
 # SQLExecutor
+
 A command-line tool to execute SQL scripts.
+
+I wrote this program to help run long database scripts one statement at a time. Running an entire script can be disastrous if one statement fails and the driver program continues to execute later statements. Being able to "resume" a script in the middle is also very important in case you need to modify the script and re-run it from somewhere in the middle.
 
 ## Building
 
