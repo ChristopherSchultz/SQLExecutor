@@ -14,13 +14,17 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Formatter;
+import java.util.Properties;
 
 /**
  * Executes a SQL script one statement at a time. See the "usage" method for
@@ -47,6 +51,7 @@ public class SQLExecutor
         boolean readSecurePassword = false;
         String jdbcUrl = null;
         String jdbcDriverClassName = null;
+        String driverJarFile = null;
         String script = null;
         String encoding = System.getProperty("file.encoding", "UTF-8");
         boolean clearScreenBeforeStatement = false;
@@ -68,6 +73,8 @@ public class SQLExecutor
                 jdbcUrl = args[i++];
             else if("--driver".equals(arg))
                 jdbcDriverClassName = args[i++];
+            else if("--driverjar".equals(arg))
+                driverJarFile = args[i++];
             else if("--script".equals(arg))
                 script = args[i++];
             else if("--encoding".equals(arg))
@@ -97,9 +104,25 @@ public class SQLExecutor
             password = new String(System.console().readPassword("Enter password: "));
 
         // Load JDBC driver
+        Driver driver = null;
         try
         {
-            Class.forName(jdbcDriverClassName).newInstance();
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+
+            if(null != driverJarFile) {
+                URL url = new URL("file:" + driverJarFile);
+
+                cl = new URLClassLoader(new URL[] { url }, cl);
+            }
+
+            Class<?> driverClass = Class.forName(jdbcDriverClassName, true, cl);
+            if(!Driver.class.isAssignableFrom(driverClass))
+                throw new IllegalArgumentException("Driver class " + jdbcDriverClassName + " is not a JDBC driver.");
+
+            @SuppressWarnings("unchecked") // This is indeed checked, above
+            Class<Driver> specClass = (Class<Driver>)driverClass;
+
+            driver = specClass.newInstance();
         }
         catch (Exception e)
         {
@@ -112,10 +135,17 @@ public class SQLExecutor
         Connection conn = null;
         try
         {
-            if(null != username || null != password)
-                conn = DriverManager.getConnection(jdbcUrl, username, password);
-            else
-                conn = DriverManager.getConnection(jdbcUrl);
+            Properties props = null;
+
+            if(null != username || null != password) {
+                props = new Properties();
+                if(null != username)
+                    props.put("user", username);
+                if(null != password)
+                    props.put("password", password);
+            }
+
+            conn = driver.connect(jdbcUrl, props);
         }
         catch (SQLException sqle)
         {
