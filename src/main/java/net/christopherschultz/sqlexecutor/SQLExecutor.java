@@ -326,6 +326,20 @@ public class SQLExecutor
                         }
                         readNext = false;
                     }
+                    else if("c".equals(command))
+                    {
+                        try
+                        {
+                            System.out.println("Executing COMMIT...");
+                            executeSQL("COMMIT;", conn, System.out);
+                        }
+                        catch (SQLException sqle)
+                        {
+                            System.err.println("Failed to COMMIT transaction.");
+                            sqle.printStackTrace();
+                        }
+                        readNext = false;
+                    }
                     else if("x".equals(command) || "y".equals(command))
                     {
                         if(!complete)
