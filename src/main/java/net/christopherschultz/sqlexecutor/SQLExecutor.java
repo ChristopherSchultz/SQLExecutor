@@ -121,7 +121,7 @@ public class SQLExecutor
             @SuppressWarnings("unchecked") // This is indeed checked, above
             Class<Driver> specClass = (Class<Driver>)driverClass;
 
-            driver = specClass.newInstance();
+            driver = specClass.getConstructor().newInstance();
         }
         catch (Exception e)
         {
