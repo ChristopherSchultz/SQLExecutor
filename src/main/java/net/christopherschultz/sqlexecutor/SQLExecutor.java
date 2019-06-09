@@ -720,7 +720,7 @@ public class SQLExecutor
         System.out.println("  --askpass           Securely-requests the password from the console.");
         System.out.println("  --clear             Clears the screen before displaying each statement.");
         System.out.println("  --driverjar jarfile Specifies the JAR file containing the JDBC driver.");
-        System.out.println("  --encoding charset  The character encoding of the script file.");
+        System.out.println("  --encoding charset  The character encoding of the script file (default: " + System.getProperty("file.encoding", "UTF-8") + ").");
         System.out.println("  --password password The database password.");
         System.out.println("  --skip n            Skips n lines at the beginning of the script.");
         System.out.println("  --username username The name of the database user.");
